@@ -4,6 +4,11 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toolbar;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        new FetchData().execute();
+
     }
 
     private class FetchData extends AsyncTask<Void,Void,String>{
@@ -43,9 +52,11 @@ public class MainActivity extends AppCompatActivity {
             // Will contain the raw JSON response as a Java string.
             String jsonStr = null;
 
+
+
             try {
                 // Construct the URL for the Internet service
-                URL url = new URL("_ENTER_THE_URL_TO_THE_PHP_SERVICE_SERVING_JSON_HERE_");
+                URL url = new URL("http://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
 
                 // Create the request to the PHP-service, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -93,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+
         @Override
         protected void onPostExecute(String o) {
             super.onPostExecute(o);
@@ -101,6 +114,15 @@ public class MainActivity extends AppCompatActivity {
 
             // Implement a parsing code that loops through the entire JSON and creates objects
             // of our newly created Mountain class.
+            try {
+                JSONArray json1 = new JSONArray(o);
+                JSONObject a = new JSONObject(json1.getString(1));
+                Log.d("mupp",a.toString());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
