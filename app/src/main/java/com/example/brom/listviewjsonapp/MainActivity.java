@@ -3,8 +3,12 @@ package com.example.brom.listviewjsonapp;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 // Create a new class, Mountain, that can hold your JSON data
@@ -31,14 +36,60 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ArrayList<Mountain> mountainActivityArrayList=new ArrayList<>();
+    private ArrayAdapter<Mountain> adapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+
+
+
+        adapter=new ArrayAdapter<Mountain>(this,R.layout.list_item_textview,R.id.list_item_textview);
+        ListView myListView = (ListView) findViewById(R.id.list_item_textview);
+        myListView.setAdapter(adapter);
         new FetchData().execute();
+/*
+        mountainActivityArrayList.add(new Mountain("Matterhorn","Alps",4478));
+        mountainActivityArrayList.add(new Mountain("Mont Blanc","Alps",4808));
+        mountainActivityArrayList.add(new Mountain("Denali","Alaska",6190));
+*/
+    }
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.action_refresh) {
+
+            adapter.clear();
+            new FetchData().execute();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private class FetchData extends AsyncTask<Void,Void,String>{
@@ -109,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String o) {
             super.onPostExecute(o);
+
             // This code executes after we have received our data. The String object o holds
             // the un-parsed JSON string or is null if we had an IOException during the fetch.
 
@@ -116,8 +168,23 @@ public class MainActivity extends AppCompatActivity {
             // of our newly created Mountain class.
             try {
                 JSONArray json1 = new JSONArray(o);
+                //Log.d("a18lukto", String.valueOf(0));
                 JSONObject a = new JSONObject(json1.getString(1));
+
+
+                for(int i = 0; i<json1.length(); i++) {
+
+                    JSONObject mountains = json1.getJSONObject(i);
+                    String mountainName = mountains.getString("name");
+                    String mountainLocation = mountains.getString("location");
+                    int mountainHeight = mountains.getInt("size");
+                    Log.d("mupp",mountainName);
+                    adapter.add(new Mountain(mountainName, mountainLocation, mountainHeight));
+                }
+
                 Log.d("mupp",a.toString());
+
+
 
             } catch (JSONException e) {
                 e.printStackTrace();

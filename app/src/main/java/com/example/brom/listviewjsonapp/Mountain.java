@@ -3,21 +3,21 @@ package com.example.brom.listviewjsonapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MountainActivity extends AppCompatActivity {
+public class Mountain {
 
 
     private String name;
     private String location;
     private int height;
 
-    public MountainActivity(String inName, String inLocation, int inHeight) {
+    public Mountain(String inName, String inLocation, int inHeight) {
         name = inName;
         location = inLocation;
         height = inHeight;
 
     }
 
-    public MountainActivity(String inName) {
+    public Mountain(String inName) {
         name = inName;
         location = "";
         height = -1;
@@ -41,13 +41,6 @@ public class MountainActivity extends AppCompatActivity {
 
     public void setHeight(int newHeight) {
         height = newHeight;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mountain);
-
     }
 
 }
