@@ -1,5 +1,6 @@
 package com.example.brom.listviewjsonapp;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,8 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // Toolbar toolbar =
+        // (Toolbar) findViewById(R.id.toolbar);
+
 
 
 
@@ -53,10 +59,17 @@ public class MainActivity extends AppCompatActivity {
         ListView myListView = (ListView) findViewById(R.id.list_item_textview);
         myListView.setAdapter(adapter);
         new FetchData().execute();
+
+        myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                  public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                  Toast.makeText(getApplicationContext(), adapter.getItem(position).info(), Toast.LENGTH_SHORT).show();
+                                              }
+
+        });
+
 /*
-        mountainActivityArrayList.add(new Mountain("Matterhorn","Alps",4478));
-        mountainActivityArrayList.add(new Mountain("Mont Blanc","Alps",4808));
-        mountainActivityArrayList.add(new Mountain("Denali","Alaska",6190));
+
 */
     }
 
@@ -168,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
             // of our newly created Mountain class.
             try {
                 JSONArray json1 = new JSONArray(o);
-                //Log.d("a18lukto", String.valueOf(0));
                 JSONObject a = new JSONObject(json1.getString(1));
 
 
@@ -189,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+
 
         }
     }
